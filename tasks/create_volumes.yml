@@ -1,9 +1,9 @@
 ---
-- name: create directory for data_volume
+- name: create the directory for data_volume
   file:
     path: "{{data_volume}}"
     state: directory
-    owner: root
+    owner: "{{www_data_uid}}"
     group: root
     mode: 0755
   when: >

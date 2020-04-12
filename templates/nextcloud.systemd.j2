@@ -1,14 +1,15 @@
 [Install]
-WantedBy = multi-user.target
+WantedBy=multi-user.target
 
 [Unit]
-Description = nextcloud service
-After       = docker.service
-Requires    = docker.service
+Description={{service_name}} service
+After=docker.service
+Requires=docker.service
 
 [Service]
-ExecStartPre = -/usr/bin/docker rm -f %n
-ExecStart = /usr/bin/docker run --name %n \
+ExecStartPre=-/usr/bin/docker rm -f {{docker_container_name}}
+
+ExecStart=/usr/bin/docker run --name {{docker_container_name}} \
 {% if data_volume != "" %}
             --volume {{data_volume}}:/var/www/html \
 {% endif %}
@@ -16,8 +17,17 @@ ExecStart = /usr/bin/docker run --name %n \
             --publish {{interface}}:{{http_port}}:80 \
 {% endif %}
             {{image_name}}:{{image_version}}
-ExecStop  = -/usr/bin/docker stop %n
-ExecStopPost  = -/usr/bin/docker rm -f %n
-Restart = always
-RestartSec = 60s
-TimeoutSec=60
+
+ExecStop=-/usr/bin/docker stop {{docker_container_name}}
+
+ExecStopPost=-/usr/bin/docker rm -f {{docker_container_name}}
+ExecStopPost=-/usr/bin/docker run --rm -u {{www_data_uid}} --name {{docker_container_name}} \
+{% if data_volume != "" %}
+            --volume {{data_volume}}:/var/www/html \
+{% endif %}
+            {{image_name}}:{{image_version}} \
+            /bin/bash -c "/var/www/html/occ db:convert-filecache-bigint"
+
+Restart=always
+RestartSec=60s
+TimeoutSec=3600
