@@ -2,6 +2,8 @@
 - name: pull image
   docker_image:
     name: "{{image_name}}:{{image_version}}"
+    source: pull
+  register: dockerimage
 
 - include: create_volumes.yml
 
@@ -13,6 +15,14 @@
   command: systemctl daemon-reload
   when: nextcloud_service.changed
 
-- name: Restart service
-  service: name=nextcloud state=restarted enabled=yes
-  when: nextcloud_service.changed
+- name: Restart service (on changes)
+  service:
+    name: nextcloud
+    state: restarted
+    enabled: yes
+  when: nextcloud_service.changed or dockerimage.changed
+
+- name: Start service (if not started)
+  service:
+    name: nextcloud
+    state: started

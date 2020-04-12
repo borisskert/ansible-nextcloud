@@ -1,0 +1,13 @@
+---
+- hosts: test_machine
+  become: yes
+
+  roles:
+    - role: install-docker
+      storage_driver: overlay2
+      cleanup_enabled: no
+      install_pip_docker: yes
+
+    - role: ansible-nextcloud
+      http_port: 10081
+      data_volume: /srv/docker/nextcloud

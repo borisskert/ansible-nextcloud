@@ -1,28 +1,23 @@
-ansible-nextcloud
-=================
+# ansible-nextcloud
 
 Installs nextcloud as docker container.
 
-System requirements
--------------------
+## System requirements
 
 * Docker
 * Systemd
 
-Role requirements
------------------
+## Role requirements
 
 * python-docker package
 
-Tasks
------
+## Tasks
 
 * Create volume paths for docker container
 * Setup systemd unit file
 * Start/Restart systemd service
 
-Role parameters
---------------
+# Role parameters
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
@@ -32,8 +27,7 @@ Role parameters
 | http_port     | port       | no   | 80               | Mapped HTTP port                       |
 | data_volume   | path       | no   | <empty>          | Path to data volume                    |
 
-Example Playbook
-----------------
+# Example Playbook
 
 Usage (without parameters):
 
