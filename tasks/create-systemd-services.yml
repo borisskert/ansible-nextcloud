@@ -5,7 +5,7 @@
     dest: "/etc/systemd/system/{{service_name}}.service"
     owner: root
     group: root
-    mode: 0550
+    mode: 0644
   register: nextcloud_service
 
 - name: Create systemd unit file for nextcloud add-missing-indices
@@ -14,7 +14,7 @@
     dest: "/etc/systemd/system/{{indices_service_name}}.service"
     owner: root
     group: root
-    mode: 0550
+    mode: 0644
   register: nextcloud_indices_service
 
 - name: Create systemd timer file for nextcloud add-missing-indices
