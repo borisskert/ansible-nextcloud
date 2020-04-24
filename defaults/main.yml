@@ -6,3 +6,13 @@ interface: 0.0.0.0
 http_port: 80
 
 data_volume: ''
+
+
+service_name: nextcloud
+
+www_data_uid: '033'
+
+upgrade_service_name: "{{service_name}}-upgrade"
+indices_service_name: "{{service_name}}-indices"
+
+docker_container_name: "{{service_name}}.service"
