@@ -1,0 +1,7 @@
+---
+- name: Check 'data_volume' parameter
+  assert:
+    that:
+      - "data_volume is defined"
+      - "data_volume | length > 0"
+    fail_msg: "parameter 'data_volume' is missing"

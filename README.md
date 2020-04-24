@@ -17,7 +17,7 @@ Installs nextcloud as docker container.
 * Setup systemd unit file
 * Start/Restart systemd service
 
-# Role parameters
+## Role parameters
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
@@ -25,21 +25,34 @@ Installs nextcloud as docker container.
 | image_version | text | no         | 13.0.0    | Docker image version |
 | interface     | ip address | no   | 0.0.0.0          | Mapped network for web-interface ports |
 | http_port     | port       | no   | 80               | Mapped HTTP port                       |
-| data_volume   | path       | no   | <empty>          | Path to data volume                    |
+| data_volume   | path       | yes  | <empty>          | Path to data volume                    |
 
-# Example Playbook
+## Usage
 
-Usage (without parameters):
+### Add to `requirement.yml`:
 
+```yaml
+- name: install-nextcloud
+  src: https://github.com/borisskert/ansible-nextcloud.git
+  scm: git
+```
+
+Minimal playbook:
+
+```yaml
     - hosts: servers
       roles:
-         - { role: install-docker-nextcloud }
+      - role: install-nextcloud
+        data_volume: /srv/nextcloud
+```
 
-Usage (with parameters):
+Typical playbook:
 
+```yaml
     - hosts: servers
-      roles:
-      - role: install-docker-nextcloud
-        http_port: 10081
-        interface: "172.17.0.1"
-        data_volume: /srv/docker/nextcloud
+    - role: install-nextcloud
+      image_version: 18.0
+      http_port: 80
+      interface: 0.0.0.0
+      data_volume: /srv/nextcloud
+```

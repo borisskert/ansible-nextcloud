@@ -10,9 +10,7 @@ Requires=docker.service
 ExecStartPre=-/usr/bin/docker rm -f {{docker_container_name}}
 
 ExecStart=/usr/bin/docker run --name {{docker_container_name}} \
-{% if data_volume != "" %}
             --volume {{data_volume}}:/var/www/html \
-{% endif %}
 {% if http_port != "" %}
             --publish {{interface}}:{{http_port}}:80 \
 {% endif %}
@@ -22,9 +20,7 @@ ExecStop=-/usr/bin/docker stop {{docker_container_name}}
 
 ExecStopPost=-/usr/bin/docker rm -f {{docker_container_name}}
 ExecStopPost=-/usr/bin/docker run --rm -u {{www_data_uid}} --name {{docker_container_name}} \
-{% if data_volume != "" %}
             --volume {{data_volume}}:/var/www/html \
-{% endif %}
             {{image_name}}:{{image_version}} \
             /bin/bash -c "/var/www/html/occ db:convert-filecache-bigint"
 
