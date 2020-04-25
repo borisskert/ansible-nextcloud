@@ -1,18 +1,31 @@
 ---
 image_name: nextcloud
-image_version: 18.0
+image_version: latest
 
 interface: 0.0.0.0
 http_port: 80
 
-data_volume: ''
+www_volume: ''
+database_volume: ''
 
+secret_size: 16
 
 service_name: nextcloud
 
 www_data_uid: '033'
+database_uid: '999'
 
-upgrade_service_name: "{{service_name}}-upgrade"
-indices_service_name: "{{service_name}}-indices"
+working_directory: /opt/nextcloud
+docker_working_directory: "{{working_directory}}/docker"
 
 docker_container_name: "{{service_name}}.service"
+
+
+postgres_password_file_path: "{{docker_working_directory}}/postgres_password.txt"
+docker_compose_path: "{{docker_working_directory}}/docker-compose.yml"
+docker_compose_convert_filecache_bigint_path: "{{docker_working_directory}}/docker-compose-convert-filecache-bigint.yml"
+
+db_image_name: postgres
+db_image_version: latest
+
+docker_compose_executable: /usr/local/bin/docker-compose

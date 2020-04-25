@@ -1,7 +1,14 @@
 ---
-- name: Check 'data_volume' parameter
+- name: Check 'www_volume' parameter
   assert:
     that:
-      - "data_volume is defined"
-      - "data_volume | length > 0"
-    fail_msg: "parameter 'data_volume' is missing"
+      - "www_volume is defined"
+      - "www_volume | length > 0"
+    fail_msg: "parameter 'www_volume' is missing"
+
+- name: Check 'database_volume' parameter
+  assert:
+    that:
+      - "database_volume is defined"
+      - "database_volume | length > 0"
+    fail_msg: "parameter 'database_volume' is missing"

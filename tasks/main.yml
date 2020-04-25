@@ -1,12 +1,6 @@
 ---
 - include: check-parameters.yml
-
-- name: pull image
-  docker_image:
-    name: "{{image_name}}:{{image_version}}"
-    source: pull
-  register: dockerimage
-
+- include: setup-docker-environment.yml
 - include: create-volumes.yml
 
 - include: create-systemd-services.yml
@@ -16,7 +10,9 @@
     name: "{{service_name}}"
     state: restarted
     enabled: yes
-  when: nextcloud_service.changed or dockerimage.changed
+  when: nextcloud_service.changed
+    or dockerimage.changed
+    or db_dockerimage.changed
 
 - name: Start service (if not started)
   service:

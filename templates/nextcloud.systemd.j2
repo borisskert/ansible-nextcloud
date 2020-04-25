@@ -7,22 +7,37 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-ExecStartPre=-/usr/bin/docker rm -f {{docker_container_name}}
+ExecStartPre=-{{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                             --file {{docker_compose_path}} \
+                             --project-name {{service_name}} \
+                             down --remove-orphans
 
-ExecStart=/usr/bin/docker run --name {{docker_container_name}} \
-            --volume {{data_volume}}:/var/www/html \
-{% if http_port != "" %}
-            --publish {{interface}}:{{http_port}}:80 \
-{% endif %}
-            {{image_name}}:{{image_version}}
+ExecStartPre={{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                            --file {{docker_compose_path}} \
+                            --project-name {{service_name}} \
+                            pull
 
-ExecStop=-/usr/bin/docker stop {{docker_container_name}}
+ExecStart={{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                         --file {{docker_compose_path}} \
+                         --project-name {{service_name}} \
+                         up
 
-ExecStopPost=-/usr/bin/docker rm -f {{docker_container_name}}
-ExecStopPost=-/usr/bin/docker run --rm -u {{www_data_uid}} --name {{docker_container_name}} \
-            --volume {{data_volume}}:/var/www/html \
-            {{image_name}}:{{image_version}} \
-            /bin/bash -c "/var/www/html/occ db:convert-filecache-bigint"
+ExecStop={{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                         --file {{docker_compose_path}} \
+                         --project-name {{service_name}} \
+                         exec -T -u {{www_data_uid}} app \
+                         /bin/bash -c "/var/www/html/occ db:add-missing-indices"
+
+ExecStop={{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                         --file {{docker_compose_path}} \
+                         --project-name {{service_name}} \
+                         down --remove-orphans
+
+ExecStop={{docker_compose_executable}} --project-directory {{docker_working_directory}} \
+                         --file {{docker_compose_path}} \
+                         --project-name {{service_name}} \
+                         run -T -u {{www_data_uid}} app \
+                         /bin/bash -c "echo y | /var/www/html/occ db:convert-filecache-bigint"
 
 Restart=always
 RestartSec=60s

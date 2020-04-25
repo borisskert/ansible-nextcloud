@@ -5,6 +5,7 @@ Installs nextcloud as docker container.
 ## System requirements
 
 * Docker
+* docker-compose
 * Systemd
 
 ## Role requirements
@@ -13,6 +14,7 @@ Installs nextcloud as docker container.
 
 ## Tasks
 
+* Template docker environment and pull docker images
 * Create volume paths for docker container
 * Setup systemd unit file
 * Start/Restart systemd service
@@ -21,11 +23,15 @@ Installs nextcloud as docker container.
 
 | Variable      | Type | Mandatory? | Default | Description           |
 |---------------|------|------------|---------|-----------------------|
-| image_name    | text | no         | nextcloud | Docker image name    |
-| image_version | text | no         | 13.0.0    | Docker image version |
-| interface     | ip address | no   | 0.0.0.0          | Mapped network for web-interface ports |
-| http_port     | port       | no   | 80               | Mapped HTTP port                       |
-| data_volume   | path       | yes  | <empty>          | Path to data volume                    |
+| image_name    | text | no         | nextcloud | Docker image name (recommended to use the default image)  |
+| image_version | text | no         | latest    | Docker image version (recommended to use a fixed version like `18.0`) |
+| db_image_name    | text | no         | postgres | Docker image name (recommended to use the `postgres` docker image |
+| db_image_version | text | no         | latest    | Docker image version (recommended to use a fixed version like `12.2`) |
+| interface        | ip address | no   | 0.0.0.0          | Mapped network for web-interface ports |
+| http_port        | port       | no   | 80               | Mapped HTTP port                       |
+| www_volume       | path       | yes  | <empty>          | Path to nextcloud's www volume         |
+| database_volume  | path       | yes  | <empty>          | Path to database volume                |
+| secret_size      | number     | no   | 16               | Size of the generated database secret  |
 
 ## Usage
 
@@ -43,7 +49,8 @@ Minimal playbook:
     - hosts: servers
       roles:
       - role: install-nextcloud
-        data_volume: /srv/nextcloud
+        www_volume: /srv/nextcloud/www
+        database_volume: /srv/nextcloud/database
 ```
 
 Typical playbook:
@@ -52,7 +59,10 @@ Typical playbook:
     - hosts: servers
     - role: install-nextcloud
       image_version: 18.0
+      db_image_version: 12.2
       http_port: 80
       interface: 0.0.0.0
-      data_volume: /srv/nextcloud
+      secret_size: 32
+      www_volume: /srv/nextcloud/www
+      database_volume: /srv/nextcloud/database
 ```

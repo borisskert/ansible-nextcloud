@@ -1,0 +1,37 @@
+---
+- name: pull image
+  docker_image:
+    name: "{{image_name}}:{{image_version}}"
+    source: pull
+  register: dockerimage
+
+- name: pull image
+  docker_image:
+    name: "{{db_image_name}}:{{db_image_version}}"
+    source: pull
+  register: db_dockerimage
+
+- name: create docker working directory
+  file:
+    path: "{{docker_working_directory}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Check if postgres password file exists
+  stat:
+    path: "{{postgres_password_file_path}}"
+  register: postgres_password_file_result
+
+- include: generate-postgres-password.yml
+  when: postgres_password_file_result.stat.exists == false
+
+- name: template docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{docker_compose_path}}"
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_compose_file

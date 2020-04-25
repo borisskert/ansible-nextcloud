@@ -5,6 +5,11 @@ vagrant up --provision
 
 ansible-galaxy install -r requirements.yml -p ./roles --force
 
+echo "Waiting for answer on port 22..."
+while ! timeout 1 nc -z 192.168.33.84 22; do
+  sleep 0.2
+done
+
 ansible-playbook -i inventory.ini test.yml
 
 ansible-playbook -i inventory.ini test.yml \
@@ -12,11 +17,13 @@ ansible-playbook -i inventory.ini test.yml \
   && (echo 'Idempotence test: pass' && exit 0) \
   || (echo 'Idempotence test: fail' && exit 1)
 
-./wtfc -T 300 -S 0 -I 2 curl -f http://192.168.33.84:10081
+echo "Waiting for answer from nextcloud..."
+while ! timeout 1 nc -z 192.168.33.84 10081; do
+  sleep 0.2
+done
 
-curl -o /dev/null -s -w "%{http_code}\n" http://192.168.33.84:10081 \
- | grep -qE '302|200' \
-  && (echo 'curl test: pass' && exit 0) \
-  || (echo 'curl test: fail' && exit 1)
+(nc -z 192.168.33.84 10081) && \
+(echo 'Netcat test: pass' && exit 0) \
+|| (echo 'Netcat test: fail' && exit 1)
 
-vagrant destroy -f
+#vagrant destroy -f

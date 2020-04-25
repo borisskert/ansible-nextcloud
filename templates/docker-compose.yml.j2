@@ -1,0 +1,35 @@
+version: '3.2'
+
+# See https://hub.docker.com/_/nextcloud/
+
+services:
+  db:
+    image: {{db_image_name}}:{{db_image_version}}
+    volumes:
+      - {{database_volume}}:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=/run/secrets/postgres_password
+    secrets:
+      - postgres_password
+
+  app:
+    image: {{image_name}}:{{image_version}}
+    ports:
+      - {{interface}}:{{http_port}}:80
+    volumes:
+      - {{www_volume}}:/var/www/html
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=/run/secrets/postgres_password
+    depends_on:
+      - db
+    secrets:
+      - postgres_password
+
+secrets:
+  postgres_password:
+    file: ./postgres_password.txt

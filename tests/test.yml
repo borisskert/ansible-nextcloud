@@ -8,6 +8,12 @@
       cleanup_enabled: no
       install_pip_docker: yes
 
+    - install-docker-compose
+
     - role: ansible-nextcloud
+      image_version: 18.0
+      db_image_version: 12.2
       http_port: 10081
-      data_volume: /srv/docker/nextcloud
+      www_volume: /srv/docker/nextcloud/www
+      database_volume: /srv/docker/nextcloud/database
+      secret_size: 32
