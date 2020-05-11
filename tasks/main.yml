@@ -5,16 +5,5 @@
 
 - include: create-systemd-services.yml
 
-- name: Restart service (on changes)
-  service:
-    name: "{{service_name}}"
-    state: restarted
-    enabled: yes
-  when: nextcloud_service.changed
-    or dockerimage.changed
-    or db_dockerimage.changed
-
-- name: Start service (if not started)
-  service:
-    name: "{{service_name}}"
-    state: started
+- name: Start systemd-managed docker containers
+  meta: flush_handlers

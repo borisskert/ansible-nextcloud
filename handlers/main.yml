@@ -1,0 +1,19 @@
+---
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+
+- name: Start nextcloud service
+  service:
+    name: "{{ service_name }}"
+    state: started
+  register: nextcloud_service_start
+
+- name: Restart nextcloud service
+  service:
+    name: "{{ service_name }}"
+    state: restarted
+  when: not (
+    nextcloud_service_start is defined
+    and nextcloud_service_start.changed
+    )

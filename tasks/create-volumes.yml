@@ -1,16 +1,16 @@
 ---
 - name: create nextcloud www volume
   file:
-    path: "{{www_volume}}"
+    path: "{{ www_volume }}"
     state: directory
-    owner: "{{www_data_uid}}"
+    owner: "{{ www_data_uid }}"
     group: root
-    mode: 0755
+    mode: 0750
 
 - name: create database volume
   file:
-    path: "{{database_volume}}"
+    path: "{{ database_volume }}"
     state: directory
-    owner: "{{database_uid}}"
+    owner: "{{ database_uid }}"
     group: root
     mode: 0700

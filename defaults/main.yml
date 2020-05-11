@@ -21,9 +21,11 @@ docker_working_directory: "{{working_directory}}/docker"
 docker_container_name: "{{service_name}}.service"
 
 
-postgres_password_file_path: "{{docker_working_directory}}/postgres_password.txt"
+postgres_password_file_path:
+  "{{docker_working_directory}}/postgres_password.txt"
 docker_compose_path: "{{docker_working_directory}}/docker-compose.yml"
-docker_compose_convert_filecache_bigint_path: "{{docker_working_directory}}/docker-compose-convert-filecache-bigint.yml"
+docker_compose_convert_filecache_bigint_path:
+  "{{docker_working_directory}}/docker-compose-convert-filecache-bigint.yml"
 
 db_image_name: postgres
 db_image_version: latest
