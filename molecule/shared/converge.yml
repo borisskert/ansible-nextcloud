@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - role: ansible-nextcloud
+      image_version: latest
+      db_image_version: latest
+      http_port: 10081
+      www_volume: /srv/nextcloud/www
+      database_volume: /srv/nextcloud/database
+      secret_size: 32

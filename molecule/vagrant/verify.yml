@@ -1,0 +1,73 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Should template docker-compose file
+      stat:
+        path: /opt/nextcloud/docker/docker-compose.yml
+        checksum_algorithm: sha256
+      register: docker_file
+      # Expecting file to have content:
+      #  version: '3.2'
+      #
+      #  # See https://hub.docker.com/_/nextcloud/
+      #
+      #  services:
+      #    db:
+      #      image: postgres:latest
+      #      volumes:
+      #        - /srv/nextcloud/database:/var/lib/postgresql/data
+      #      environment:
+      #        - POSTGRES_DB=nextcloud_db
+      #        - POSTGRES_USER=nextcloud
+      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
+      #      secrets:
+      #        - postgres_password
+      #
+      #    app:
+      #      image: nextcloud:latest
+      #      ports:
+      #        - 0.0.0.0:10081:80
+      #      volumes:
+      #        - /srv/nextcloud/www:/var/www/html
+      #      environment:
+      #        - POSTGRES_HOST=db
+      #        - POSTGRES_DB=nextcloud_db
+      #        - POSTGRES_USER=nextcloud
+      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
+      #      depends_on:
+      #        - db
+      #      secrets:
+      #        - postgres_password
+      #
+      #  secrets:
+      #    postgres_password:
+      #      file: ./postgres_password.txt
+      failed_when: not (
+        docker_file.stat.exists
+        and docker_file.stat.checksum
+        == '893cdc296d449ec3f2dec86e1c21835c30247d0210cdc0aaaf753410b38c9d6b'
+        )
+
+    - name: Should create www volume
+      stat:
+        path: /srv/nextcloud/www
+      register: www_volume_directory
+      failed_when: not www_volume_directory.stat.exists
+
+    - name: Should create database volume
+      stat:
+        path: /srv/nextcloud/database
+      register: database_volume_directory
+      failed_when: not database_volume_directory.stat.exists
+
+    - name: Should open 10081/tcp port
+      command: nc -z -w1 localhost 10081
+      changed_when: false
+      register: netcat_10081
+      retries: 300
+      delay: 1
+      until: netcat_10081 is defined
+        and netcat_10081.rc == 0

@@ -19,3 +19,7 @@
   changed_when: nextcloud_service.changed
     or nextcloud_service.status.SubState != 'running'
   notify: Start nextcloud service
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )
