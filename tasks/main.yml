@@ -7,3 +7,13 @@
 
 - name: Start systemd-managed docker containers
   meta: flush_handlers
+
+- name: Enable/start nextcloud service (if not started)
+  service:
+    name: "{{ service_name }}"
+    enabled: true
+    state: started
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )
