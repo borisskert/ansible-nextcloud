@@ -4,9 +4,9 @@ version: '3.2'
 
 services:
   db:
-    image: {{db_image_name}}:{{db_image_version}}
+    image: {{nextcloud_db_image_name}}:{{nextcloud_db_image_version}}
     volumes:
-      - {{database_volume}}:/var/lib/postgresql/data
+      - {{nextcloud_database_volume}}:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=nextcloud_db
       - POSTGRES_USER=nextcloud
@@ -15,11 +15,11 @@ services:
       - postgres_password
 
   app:
-    image: {{image_name}}:{{image_version}}
+    image: {{nextcloud_image_name}}:{{nextcloud_image_version}}
     ports:
-      - {{interface}}:{{http_port}}:80
+      - {{nextcloud_interface}}:{{nextcloud_http_port}}:80
     volumes:
-      - {{www_volume}}:/var/www/html
+      - {{nextcloud_www_volume}}:/var/www/html
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=nextcloud_db

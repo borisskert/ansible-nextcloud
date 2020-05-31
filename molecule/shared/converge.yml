@@ -5,9 +5,9 @@
 
   roles:
     - role: ansible-nextcloud
-      image_version: latest
-      db_image_version: latest
-      http_port: 10081
-      www_volume: /srv/nextcloud/www
-      database_volume: /srv/nextcloud/database
-      secret_size: 32
+      nextcloud_image_version: latest
+      nextcloud_db_image_version: latest
+      nextcloud_http_port: 10081
+      nextcloud_www_volume: /srv/nextcloud/www
+      nextcloud_database_volume: /srv/nextcloud/database
+      nextcloud_db_secret_size: 32

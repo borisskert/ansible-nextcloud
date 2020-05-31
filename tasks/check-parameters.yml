@@ -1,14 +1,14 @@
 ---
-- name: Check 'www_volume' parameter
+- name: Check 'nextcloud_www_volume' parameter
   assert:
     that:
-      - "www_volume is defined"
-      - "www_volume | length > 0"
-    fail_msg: "parameter 'www_volume' is missing"
+      - "nextcloud_www_volume is defined"
+      - "nextcloud_www_volume | length > 0"
+    fail_msg: "parameter 'nextcloud_www_volume' is missing"
 
-- name: Check 'database_volume' parameter
+- name: Check 'nextcloud_database_volume' parameter
   assert:
     that:
-      - "database_volume is defined"
-      - "database_volume | length > 0"
-    fail_msg: "parameter 'database_volume' is missing"
+      - "nextcloud_database_volume is defined"
+      - "nextcloud_database_volume | length > 0"
+    fail_msg: "parameter 'nextcloud_database_volume' is missing"

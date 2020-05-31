@@ -1,19 +1,19 @@
 ---
 - name: pull image
   docker_image:
-    name: "{{ image_name }}:{{ image_version }}"
+    name: "{{ nextcloud_image_name }}:{{ nextcloud_image_version }}"
     source: pull
   notify: Restart nextcloud service
 
 - name: pull image
   docker_image:
-    name: "{{ db_image_name }}:{{ db_image_version }}"
+    name: "{{ nextcloud_db_image_name }}:{{ nextcloud_db_image_version }}"
     source: pull
   notify: Restart nextcloud service
 
 - name: create docker working directory
   file:
-    path: "{{ docker_working_directory }}"
+    path: "{{ nextcloud_docker_working_directory }}"
     state: directory
     owner: root
     group: root
@@ -21,7 +21,7 @@
 
 - name: Check if postgres password file exists
   stat:
-    path: "{{ postgres_password_file_path }}"
+    path: "{{ nextcloud_db_secret_file_path }}"
   register: postgres_password_file_result
 
 - include: generate-postgres-password.yml
@@ -30,7 +30,7 @@
 - name: template docker-compose file
   template:
     src: docker-compose.yml.j2
-    dest: "{{ docker_compose_path }}"
+    dest: "{{ nextcloud_docker_compose_path }}"
     owner: root
     group: root
     mode: 0644

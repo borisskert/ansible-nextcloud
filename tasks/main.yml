@@ -10,7 +10,7 @@
 
 - name: Enable/start nextcloud service (if not started)
   service:
-    name: "{{ service_name }}"
+    name: "{{ nextcloud_service_name }}"
     enabled: true
     state: started
   when: not (
