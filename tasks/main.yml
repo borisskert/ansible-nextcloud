@@ -4,6 +4,7 @@
 - include: create-volumes.yml
 
 - include: create-systemd-services.yml
+- include: setup-background-job.yml
 
 - name: Start systemd-managed docker containers
   meta: flush_handlers
@@ -11,6 +12,25 @@
 - name: Enable/start nextcloud service (if not started)
   service:
     name: "{{ nextcloud_service_name }}"
+    enabled: true
+    state: started
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )
+
+- name: Enable/start nextcloud-background-jobs service (if not started)
+  systemd:
+    name: "{{ nextcloud_background_service_name }}.service"
+    enabled: true
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )
+
+- name: Enable/start nextcloud-background-jobs timer (if not started)
+  systemd:
+    name: "{{ nextcloud_background_service_name }}.timer"
     enabled: true
     state: started
   when: not (

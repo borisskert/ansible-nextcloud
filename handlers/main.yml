@@ -9,3 +9,24 @@
     molecule_docker_environment is defined
     and molecule_docker_environment | bool
     )
+
+- name: Reload nextcloud-background-jobs service
+  systemd:
+    name: "{{ nextcloud_background_service_name }}.service"
+    enabled: true
+    daemon_reload: true
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )
+
+- name: Reload nextcloud-background-jobs timer
+  systemd:
+    name: "{{ nextcloud_background_service_name }}.timer"
+    enabled: true
+    state: started
+    daemon_reload: true
+  when: not (
+    molecule_docker_environment is defined
+    and molecule_docker_environment | bool
+    )

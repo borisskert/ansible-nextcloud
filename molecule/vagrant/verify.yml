@@ -7,49 +7,26 @@
     - name: Should template docker-compose file
       stat:
         path: /opt/nextcloud/docker/docker-compose.yml
-        checksum_algorithm: sha256
       register: docker_file
-      # Expecting file to have content:
-      #  version: '3.2'
-      #
-      #  # See https://hub.docker.com/_/nextcloud/
-      #
-      #  services:
-      #    db:
-      #      image: postgres:latest
-      #      volumes:
-      #        - /srv/nextcloud/database:/var/lib/postgresql/data
-      #      environment:
-      #        - POSTGRES_DB=nextcloud_db
-      #        - POSTGRES_USER=nextcloud
-      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
-      #      secrets:
-      #        - postgres_password
-      #
-      #    app:
-      #      image: nextcloud:latest
-      #      ports:
-      #        - 0.0.0.0:10081:80
-      #      volumes:
-      #        - /srv/nextcloud/www:/var/www/html
-      #      environment:
-      #        - POSTGRES_HOST=db
-      #        - POSTGRES_DB=nextcloud_db
-      #        - POSTGRES_USER=nextcloud
-      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
-      #      depends_on:
-      #        - db
-      #      secrets:
-      #        - postgres_password
-      #
-      #  secrets:
-      #    postgres_password:
-      #      file: ./postgres_password.txt
-      failed_when: not (
-        docker_file.stat.exists
-        and docker_file.stat.checksum
-        == '893cdc296d449ec3f2dec86e1c21835c30247d0210cdc0aaaf753410b38c9d6b'
-        )
+      failed_when: not docker_file.stat.exists
+
+    - name: Should nextcloud systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud.service
+      register: nextcloud_service_file
+      failed_when: not nextcloud_service_file.stat.exists
+
+    - name: Should nextcloud-background-jobs service systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud-background-jobs.service
+      register: nextcloud_background_service_file
+      failed_when: not nextcloud_background_service_file.stat.exists
+
+    - name: Should nextcloud-background-jobs timer systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud-background-jobs.timer
+      register: nextcloud_background_timer_file
+      failed_when: not nextcloud_background_timer_file.stat.exists
 
     - name: Should create www volume
       stat:

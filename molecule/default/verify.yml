@@ -28,6 +28,7 @@
       #
       #    app:
       #      image: nextcloud:latest
+      #      container_name: nextcloud_web
       #      ports:
       #        - 0.0.0.0:10081:80
       #      volumes:
@@ -48,8 +49,26 @@
       failed_when: not (
         docker_file.stat.exists
         and docker_file.stat.checksum
-        == '893cdc296d449ec3f2dec86e1c21835c30247d0210cdc0aaaf753410b38c9d6b'
+        == '0e275ea5b041faca68c9f6aa541335d15b3fb1a5741d9c269cd72d351761d326'
         )
+
+    - name: Should nextcloud systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud.service
+      register: nextcloud_service_file
+      failed_when: not nextcloud_service_file.stat.exists
+
+    - name: Should nextcloud-background-jobs service systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud-background-jobs.service
+      register: nextcloud_background_service_file
+      failed_when: not nextcloud_background_service_file.stat.exists
+
+    - name: Should nextcloud-background-jobs timer systemd unit file
+      stat:
+        path: /etc/systemd/system/nextcloud-background-jobs.timer
+      register: nextcloud_background_timer_file
+      failed_when: not nextcloud_background_timer_file.stat.exists
 
     - name: Should create www volume
       stat:

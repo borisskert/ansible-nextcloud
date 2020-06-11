@@ -11,6 +11,8 @@ nextcloud_database_volume: ''
 nextcloud_db_secret_size: 16
 
 nextcloud_service_name: nextcloud
+nextcloud_background_service_name: nextcloud-background-jobs
+nextcloud_container_name: nextcloud_web
 
 nextcloud_www_data_uid: '033'
 nextcloud_database_uid: '999'
@@ -25,5 +27,7 @@ nextcloud_docker_compose_path:
 
 nextcloud_db_image_name: postgres
 nextcloud_db_image_version: latest
+
+nextcloud_background_jobs_on_calendar: '*:0/5'
 
 docker_compose_executable: /usr/local/bin/docker-compose
