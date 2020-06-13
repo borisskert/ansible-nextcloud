@@ -34,4 +34,4 @@
     owner: root
     group: root
     mode: 0644
-  register: docker_compose_file
+  notify: Restart nextcloud service

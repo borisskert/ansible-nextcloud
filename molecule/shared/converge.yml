@@ -10,4 +10,6 @@
       nextcloud_http_port: 10081
       nextcloud_www_volume: /srv/nextcloud/www
       nextcloud_database_volume: /srv/nextcloud/database
+      nextcloud_data_volume: /srv/nextcloud/data
+      nextcloud_custom_apps_volume: /srv/nextcloud/custom_apps
       nextcloud_db_secret_size: 32

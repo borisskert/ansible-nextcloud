@@ -6,6 +6,5 @@
     owner: root
     group: root
     mode: 0644
-  register: nextcloud_service
   notify:
     - Restart nextcloud service

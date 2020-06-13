@@ -21,6 +21,12 @@ services:
       - {{ nextcloud_interface }}:{{ nextcloud_http_port }}:80
     volumes:
       - {{ nextcloud_www_volume }}:/var/www/html
+{% if nextcloud_data_volume is defined and nextcloud_data_volume | length > 0 %}
+      - {{ nextcloud_data_volume }}:/var/www/html/data
+{% endif %}
+{% if nextcloud_custom_apps_volume is defined and nextcloud_custom_apps_volume | length > 0 %}
+      - {{ nextcloud_custom_apps_volume }}:/var/www/html/custom_apps
+{% endif %}
     environment:
       - POSTGRES_HOST=db
       - POSTGRES_DB=nextcloud_db

@@ -31,7 +31,9 @@ Installs nextcloud as docker container.
 | nextcloud_http_port        | port       | no   | 80               | Mapped HTTP port                       |
 | nextcloud_www_volume       | path       | yes  | <empty>          | Path to nextcloud's www volume         |
 | nextcloud_database_volume  | path       | yes  | <empty>          | Path to database volume                |
-| nextcloud_db_secret_size      | number     | no   | 16               | Size of the generated database secret  |
+| nextcloud_data_volume      | path       | no   |                  | Path where the file data will be stored   |
+| nextcloud_custom_apps_volume | path     | no   |                  | Path where the custom apps will be stored |
+| nextcloud_db_secret_size     | number     | no   | 16               | Size of the generated database secret   |
 
 ## Usage
 
@@ -65,6 +67,8 @@ Typical playbook:
       nextcloud_db_secret_size: 32
       nextcloud_www_volume: /srv/nextcloud/www
       nextcloud_database_volume: /srv/nextcloud/database
+      nextcloud_data_volume: /srv/nextcloud/data
+      nextcloud_custom_apps_volume: /srv/nextcloud/custom_apps
 ```
 
 ## Testing

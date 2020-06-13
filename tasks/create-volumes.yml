@@ -1,11 +1,31 @@
 ---
-- name: create nextcloud www volume
+- name: create www volume
   file:
     path: "{{ nextcloud_www_volume }}"
     state: directory
     owner: "{{ nextcloud_www_data_uid }}"
     group: root
     mode: 0750
+
+- name: create data volume
+  file:
+    path: "{{ nextcloud_data_volume }}"
+    state: directory
+    owner: "{{ nextcloud_www_data_uid }}"
+    group: root
+    mode: 0770
+  when: nextcloud_data_volume is defined
+    and nextcloud_data_volume | length > 0
+
+- name: create custom_apps volume
+  file:
+    path: "{{ nextcloud_custom_apps_volume }}"
+    state: directory
+    owner: "{{ nextcloud_www_data_uid }}"
+    group: root
+    mode: 0770
+  when: nextcloud_custom_apps_volume is defined
+    and nextcloud_custom_apps_volume | length > 0
 
 - name: create database volume
   file:

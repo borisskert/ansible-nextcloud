@@ -7,50 +7,8 @@
     - name: Should template docker-compose file
       stat:
         path: /opt/nextcloud/docker/docker-compose.yml
-        checksum_algorithm: sha256
       register: docker_file
-      # Expecting file to have content:
-      #  version: '3.2'
-      #
-      #  # See https://hub.docker.com/_/nextcloud/
-      #
-      #  services:
-      #    db:
-      #      image: postgres:latest
-      #      volumes:
-      #        - /srv/nextcloud/database:/var/lib/postgresql/data
-      #      environment:
-      #        - POSTGRES_DB=nextcloud_db
-      #        - POSTGRES_USER=nextcloud
-      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
-      #      secrets:
-      #        - postgres_password
-      #
-      #    app:
-      #      image: nextcloud:latest
-      #      container_name: nextcloud_web
-      #      ports:
-      #        - 0.0.0.0:10081:80
-      #      volumes:
-      #        - /srv/nextcloud/www:/var/www/html
-      #      environment:
-      #        - POSTGRES_HOST=db
-      #        - POSTGRES_DB=nextcloud_db
-      #        - POSTGRES_USER=nextcloud
-      #        - POSTGRES_PASSWORD=/run/secrets/postgres_password
-      #      depends_on:
-      #        - db
-      #      secrets:
-      #        - postgres_password
-      #
-      #  secrets:
-      #    postgres_password:
-      #      file: ./postgres_password.txt
-      failed_when: not (
-        docker_file.stat.exists
-        and docker_file.stat.checksum
-        == '0e275ea5b041faca68c9f6aa541335d15b3fb1a5741d9c269cd72d351761d326'
-        )
+      failed_when: not docker_file.stat.exists
 
     - name: Should nextcloud systemd unit file
       stat:

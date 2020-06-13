@@ -12,6 +12,8 @@ driver:
 platforms:
   - name: ansible-nextcloud-xenial
     box: ubuntu/xenial64
+    instance_raw_config_args:
+      - 'vm.network "private_network", ip: "192.168.33.43"'
   - name: ansible-nextcloud-bionic
     box: ubuntu/bionic64
   - name: ansible-nextcloud-focal
