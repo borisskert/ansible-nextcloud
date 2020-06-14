@@ -1,7 +1,7 @@
 ---
 - name: pull image
   docker_image:
-    name: "{{ nextcloud_image_name }}:{{ nextcloud_image_version }}"
+    name: "nextcloud:{{ nextcloud_image_version }}"
     source: pull
   notify: Restart nextcloud service
 
@@ -26,6 +26,15 @@
 
 - include: generate-postgres-password.yml
   when: not (postgres_password_file_result.stat.exists | bool)
+
+- name: template docker-image file
+  template:
+    src: Dockerfile.j2
+    dest: "{{ nextcloud_dockerfile_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart nextcloud service
 
 - name: template docker-compose file
   template:

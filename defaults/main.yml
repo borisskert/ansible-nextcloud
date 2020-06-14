@@ -1,5 +1,5 @@
 ---
-nextcloud_image_name: nextcloud
+nextcloud_image_name: local/nextcloud
 nextcloud_image_version: latest
 
 nextcloud_interface: 0.0.0.0
@@ -27,10 +27,14 @@ nextcloud_db_secret_file_path:
   "{{nextcloud_docker_working_directory}}/postgres_password.txt"
 nextcloud_docker_compose_path:
   "{{nextcloud_docker_working_directory}}/docker-compose.yml"
+nextcloud_dockerfile_path:
+  "{{nextcloud_docker_working_directory}}/Dockerfile"
 
 nextcloud_db_image_name: postgres
 nextcloud_db_image_version: latest
 
 nextcloud_background_jobs_on_calendar: '*:0/5'
+
+nextcloud_additional_apt_packages: []
 
 docker_compose_executable: /usr/local/bin/docker-compose

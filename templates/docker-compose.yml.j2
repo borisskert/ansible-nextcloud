@@ -15,6 +15,7 @@ services:
       - postgres_password
 
   app:
+    build: .
     image: {{ nextcloud_image_name }}:{{ nextcloud_image_version }}
     container_name: {{ nextcloud_container_name }}
     ports:

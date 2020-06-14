@@ -11,19 +11,21 @@ ExecStartPre=-{{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
-  down --remove-orphans
+  down \
+  --remove-orphans
 
 ExecStartPre={{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
-  pull
+  build
 
 ExecStart={{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
-  up
+  up \
+  --build
 
 ExecStop={{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \
@@ -36,7 +38,8 @@ ExecStop={{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
-  down --remove-orphans
+  down \
+  --remove-orphans
 
 ExecStop={{docker_compose_executable}} \
   --project-directory {{nextcloud_docker_working_directory}} \

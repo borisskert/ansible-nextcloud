@@ -33,7 +33,8 @@ Installs nextcloud as docker container.
 | nextcloud_database_volume  | path       | yes  | <empty>          | Path to database volume                |
 | nextcloud_data_volume      | path       | no   |                  | Path where the file data will be stored   |
 | nextcloud_custom_apps_volume | path     | no   |                  | Path where the custom apps will be stored |
-| nextcloud_db_secret_size     | number     | no   | 16               | Size of the generated database secret   |
+| nextcloud_db_secret_size     | number     | no   | 16             | Size of the generated database secret   |
+| nextcloud_additional_apt_packages | array of texts | no | []      | Additional apt package to be installed into docker image |
 
 ## Usage
 
@@ -60,8 +61,8 @@ Typical playbook:
 ```yaml
     - hosts: servers
     - role: install-nextcloud
-      nextcloud_image_version: 18.0
-      nextcloud_db_image_version: 12.2
+      nextcloud_image_version: '18.0.6'
+      nextcloud_db_image_version: '12.3'
       nextcloud_http_port: 80
       nextcloud_interface: 0.0.0.0
       nextcloud_db_secret_size: 32
@@ -69,6 +70,8 @@ Typical playbook:
       nextcloud_database_volume: /srv/nextcloud/database
       nextcloud_data_volume: /srv/nextcloud/data
       nextcloud_custom_apps_volume: /srv/nextcloud/custom_apps
+      nextcloud_additional_apt_packages:
+        - smbclient
 ```
 
 ## Testing
