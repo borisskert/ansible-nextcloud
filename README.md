@@ -79,7 +79,8 @@ Typical playbook:
 Requirements:
 
 * [Vagrant](https://www.vagrantup.com/)
-* [VirtualBox](https://www.virtualbox.org/)
+* [VirtualBox](https://www.virtualbox.org/) - only if using `virtualbox`-provider
+* [libvirt](https://www.libvirt.org) - only if using `libvirt`-provider
 * [Ansible](https://docs.ansible.com/)
 * [Molecule](https://molecule.readthedocs.io/en/latest/index.html)
 * [yamllint](https://yamllint.readthedocs.io/en/stable/#)
@@ -94,8 +95,16 @@ molecule test
 
 ### Run within Vagrant
 
+#### with `virtualbox` provider
+
 ```shell script
- molecule test --scenario-name vagrant --parallel
+molecule test --scenario-name vagrant-virtualbox --parallel
+```
+
+#### with `libvirt` provider
+
+```shell script
+molecule test --scenario-name vagrant-libvirt --parallel
 ```
 
 I recommend to use [pyenv](https://github.com/pyenv/pyenv) for local testing.

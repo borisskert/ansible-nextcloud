@@ -61,6 +61,7 @@ provisioner:
   playbooks:
     prepare: ../shared/prepare.yml
     converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
   inventory:
     group_vars:
       docker:

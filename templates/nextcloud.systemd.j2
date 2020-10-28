@@ -32,6 +32,13 @@ ExecStop={{docker_compose_executable}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   exec -T -u {{nextcloud_www_data_uid}} app \
+  /bin/bash -c "/var/www/html/occ db:add-missing-columns"
+
+ExecStop={{docker_compose_executable}} \
+  --project-directory {{nextcloud_docker_working_directory}} \
+  --file {{nextcloud_docker_compose_path}} \
+  --project-name {{nextcloud_service_name}} \
+  exec -T -u {{nextcloud_www_data_uid}} app \
   /bin/bash -c "/var/www/html/occ db:add-missing-indices"
 
 ExecStop={{docker_compose_executable}} \
