@@ -1,16 +1,4 @@
 ---
-- name: pull image
-  docker_image:
-    name: "nextcloud:{{ nextcloud_image_version }}"
-    source: pull
-  notify: Restart nextcloud service
-
-- name: pull image
-  docker_image:
-    name: "{{ nextcloud_db_image_name }}:{{ nextcloud_db_image_version }}"
-    source: pull
-  notify: Restart nextcloud service
-
 - name: create docker working directory
   file:
     path: "{{ nextcloud_docker_working_directory }}"

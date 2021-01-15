@@ -12,17 +12,9 @@
         not docker_file.content == ( expected_content | b64encode )
       vars:
         expected_content: |
-          FROM nextcloud:18.0.6
+          FROM nextcloud:latest
 
           MAINTAINER borisskert <boris.skert@gmail.com>
-
-          RUN set -ex; \
-              \
-              apt-get update; \
-              apt-get install -y --no-install-recommends \
-                  smbclient \
-                  ; \
-              rm -rf /var/lib/apt/lists/*;
 
     - name: Should template docker-compose file
       slurp:
@@ -38,7 +30,7 @@
 
           services:
             db:
-              image: postgres:12.3
+              image: postgres:latest
               volumes:
                 - /srv/nextcloud/database:/var/lib/postgresql/data
               environment:
@@ -47,13 +39,14 @@
                 - POSTGRES_PASSWORD=/run/secrets/postgres_password
               secrets:
                 - postgres_password
+              restart: unless-stopped
 
             app:
               build: .
-              image: local/nextcloud:18.0.6
+              image: local/nextcloud:latest
               container_name: nextcloud_web
               ports:
-                - 0.0.0.0:10081:80
+                - 0.0.0.0:80:80
               volumes:
                 - /srv/nextcloud/www:/var/www/html
                 - /srv/nextcloud/data:/var/www/html/data
@@ -67,6 +60,7 @@
                 - db
               secrets:
                 - postgres_password
+              restart: unless-stopped
 
           secrets:
             postgres_password:
@@ -109,19 +103,33 @@
             up \
             --build
 
-          ExecStop=/usr/local/bin/docker-compose \
+          ExecStop=-/usr/local/bin/docker-compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
-            /bin/bash -c "/var/www/html/occ db:add-missing-columns"
+            php occ db:add-missing-columns
 
-          ExecStop=/usr/local/bin/docker-compose \
+          ExecStop=-/usr/local/bin/docker-compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
-            /bin/bash -c "/var/www/html/occ db:add-missing-indices"
+            php occ db:add-missing-primary-keys
+
+          ExecStop=-/usr/local/bin/docker-compose \
+            --project-directory /opt/nextcloud/docker \
+            --file /opt/nextcloud/docker/docker-compose.yml \
+            --project-name nextcloud \
+            exec -T -u 033 app \
+            php occ db:add-missing-indices
+
+          ExecStop=-/usr/local/bin/docker-compose \
+            --project-directory /opt/nextcloud/docker \
+            --file /opt/nextcloud/docker/docker-compose.yml \
+            --project-name nextcloud \
+            exec -T -u 033 app \
+            php occ db:convert-filecache-bigint --no-interaction
 
           ExecStop=/usr/local/bin/docker-compose \
             --project-directory /opt/nextcloud/docker \
@@ -129,13 +137,6 @@
             --project-name nextcloud \
             down \
             --remove-orphans
-
-          ExecStop=/usr/local/bin/docker-compose \
-            --project-directory /opt/nextcloud/docker \
-            --file /opt/nextcloud/docker/docker-compose.yml \
-            --project-name nextcloud \
-            run -T -u 033 app \
-            /bin/bash -c "echo y | /var/www/html/occ db:convert-filecache-bigint"
 
           Restart=always
           RestartSec=60s
@@ -192,14 +193,14 @@
       register: database_volume_directory
       failed_when: not database_volume_directory.stat.exists
 
-    - name: Should open 10081/tcp port
-      command: nc -z -w1 localhost 10081
+    - name: Should open 80/tcp port
+      command: nc -z -w1 localhost 80
       changed_when: false
-      register: netcat_10081
+      register: netcat_80
       retries: 300
       delay: 1
-      until: netcat_10081 is defined
-        and netcat_10081.rc == 0
+      until: netcat_80 is defined
+        and netcat_80.rc == 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

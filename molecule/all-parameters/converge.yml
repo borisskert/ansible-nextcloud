@@ -1,0 +1,18 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  roles:
+    - role: ansible-nextcloud
+      nextcloud_image_version: '20.0.4'
+      nextcloud_db_image_version: '12.5'
+      nextcloud_interface: 127.0.0.1
+      nextcloud_http_port: 10080
+      nextcloud_www_volume: /srv/my_nextcloud/www
+      nextcloud_database_volume: /srv/my_nextcloud/database
+      nextcloud_data_volume: /srv/my_nextcloud/data
+      nextcloud_custom_apps_volume: /srv/my_nextcloud/custom_apps
+      nextcloud_db_secret_size: 32
+      nextcloud_additional_apt_packages:
+        - smbclient

@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: flandiGT
+  author: borisskert
   description: Installation role for nextcloud docker container
   min_ansible_version: 2.9
   license: MIT

@@ -10,7 +10,7 @@ Installs nextcloud as docker container.
 
 ## Role requirements
 
-* python-docker package
+* (none so far)
 
 ## Tasks
 
@@ -29,10 +29,10 @@ Installs nextcloud as docker container.
 | nextcloud_db_image_version | text | no         | latest    | Docker image version (recommended to use a fixed version like `12.2`) |
 | nextcloud_interface        | ip address | no   | 0.0.0.0          | Mapped network for web-interface ports |
 | nextcloud_http_port        | port       | no   | 80               | Mapped HTTP port                       |
-| nextcloud_www_volume       | path       | yes  | <empty>          | Path to nextcloud's www volume         |
-| nextcloud_database_volume  | path       | yes  | <empty>          | Path to database volume                |
-| nextcloud_data_volume      | path       | no   |                  | Path where the file data will be stored   |
-| nextcloud_custom_apps_volume | path     | no   |                  | Path where the custom apps will be stored |
+| nextcloud_www_volume       | path       | no   | /srv/nextcloud/www      | Path to nextcloud's www volume         |
+| nextcloud_database_volume  | path       | no   | /srv/nextcloud/database | Path to database volume                |
+| nextcloud_data_volume      | path       | no   | /srv/nextcloud/data     | Path where the file data will be stored   |
+| nextcloud_custom_apps_volume | path     | no   | /srv/nextcloud/custom_apps | Path where the custom apps will be stored |
 | nextcloud_db_secret_size     | number     | no   | 16             | Size of the generated database secret   |
 | nextcloud_additional_apt_packages | array of texts | no | []      | Additional apt package to be installed into docker image |
 
@@ -79,8 +79,7 @@ Typical playbook:
 Requirements:
 
 * [Vagrant](https://www.vagrantup.com/)
-* [VirtualBox](https://www.virtualbox.org/) - only if using `virtualbox`-provider
-* [libvirt](https://www.libvirt.org) - only if using `libvirt`-provider
+* [libvirt](https://www.libvirt.org)
 * [Ansible](https://docs.ansible.com/)
 * [Molecule](https://molecule.readthedocs.io/en/latest/index.html)
 * [yamllint](https://yamllint.readthedocs.io/en/stable/#)
@@ -91,20 +90,14 @@ Requirements:
 
 ```shell script
 molecule test
+molecule test -s all-parameters
 ```
 
 ### Run within Vagrant
 
-#### with `virtualbox` provider
-
 ```shell script
-molecule test --scenario-name vagrant-virtualbox --parallel
-```
-
-#### with `libvirt` provider
-
-```shell script
-molecule test --scenario-name vagrant-libvirt --parallel
+molecule test --scenario-name vagrant --parallel
+molecule test --scenario-name vagrant-all-parameters --parallel
 ```
 
 I recommend to use [pyenv](https://github.com/pyenv/pyenv) for local testing.

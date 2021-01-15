@@ -1,8 +1,8 @@
 FROM nextcloud:{{ nextcloud_image_version }}
 
 MAINTAINER borisskert <boris.skert@gmail.com>
-
 {% if nextcloud_additional_apt_packages is defined and nextcloud_additional_apt_packages | length > 0 %}
+
 RUN set -ex; \
     \
     apt-get update; \

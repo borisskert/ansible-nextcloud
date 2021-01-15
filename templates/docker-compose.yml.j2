@@ -13,6 +13,7 @@ services:
       - POSTGRES_PASSWORD=/run/secrets/postgres_password
     secrets:
       - postgres_password
+    restart: unless-stopped
 
   app:
     build: .
@@ -37,6 +38,7 @@ services:
       - db
     secrets:
       - postgres_password
+    restart: unless-stopped
 
 secrets:
   postgres_password:

@@ -2,37 +2,35 @@
 dependency:
   name: galaxy
   options:
-    role-file: ./molecule/shared/requirements.yml
+    role-file: ./molecule/default/requirements.yml
 
 driver:
   name: vagrant
   provider:
-    name: virtualbox
+    name: libvirt
 
 platforms:
   - name: ansible-nextcloud-xenial
-    box: ubuntu/xenial64
-    instance_raw_config_args:
-      - 'vm.network "private_network", ip: "192.168.33.43"'
+    box: generic/ubuntu1604
   - name: ansible-nextcloud-bionic
-    box: ubuntu/bionic64
+    box: generic/ubuntu1804
   - name: ansible-nextcloud-focal
-    box: ubuntu/focal64
+    box: generic/ubuntu2004
   - name: ansible-nextcloud-stretch
-    box: debian/stretch64
+    box: generic/debian9
     groups:
       - debian
   - name: ansible-nextcloud-buster
-    box: debian/buster64
+    box: generic/debian10
     groups:
       - debian
 
 provisioner:
   name: ansible
   playbooks:
-    prepare: ../shared/prepare.yml
-    converge: ../shared/converge.yml
-    verify: ../shared/verify.yml
+    prepare: ../default/prepare.yml
+    converge: ../default/converge.yml
+    verify: ../default/verify.yml
   inventory:
     group_vars:
       debian:
