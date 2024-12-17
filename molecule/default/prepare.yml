@@ -7,17 +7,15 @@
     - role: install-docker
       docker_storage_driver: overlay2
       docker_cleanup_enabled: false
-      docker_install_pip_package: false
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool
         )
 
-    - role: install-docker-compose
-      docker_compose_version: 1.25.5
-      docker_compose_install_from_pip: false
-      docker_compose_bash_completion: false
-      when: not (
-        molecule_docker_environment is defined
-        and molecule_docker_environment | bool
-        )
+  post_tasks:
+    - name: Install netcat on Debian-based systems (to test open ports)
+      package:
+        name: netcat-traditional
+        state: present
+        update_cache: true
+      when: ansible_distribution == 'Debian'

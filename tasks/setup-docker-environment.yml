@@ -12,7 +12,7 @@
     path: "{{ nextcloud_db_secret_file_path }}"
   register: postgres_password_file_result
 
-- include: generate-postgres-password.yml
+- include_tasks: generate-postgres-password.yml
   when: not (postgres_password_file_result.stat.exists | bool)
 
 - name: template docker-image file

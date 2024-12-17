@@ -1,9 +1,9 @@
 ---
-- include: setup-docker-environment.yml
-- include: create-volumes.yml
+- include_tasks: setup-docker-environment.yml
+- include_tasks: create-volumes.yml
 
-- include: create-systemd-services.yml
-- include: setup-background-job.yml
+- include_tasks: create-systemd-services.yml
+- include_tasks: setup-background-job.yml
 
 - name: Start systemd-managed docker containers
   meta: flush_handlers

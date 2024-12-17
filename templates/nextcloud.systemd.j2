@@ -55,7 +55,7 @@ ExecStop=-{{docker_compose_executable}} \
   exec -T -u {{nextcloud_www_data_uid}} app \
   php occ db:convert-filecache-bigint --no-interaction
 
-ExecStop=/usr/local/bin/docker-compose \
+ExecStop={{docker_compose_executable}} \
   --project-directory /opt/nextcloud/docker \
   --file /opt/nextcloud/docker/docker-compose.yml \
   --project-name nextcloud \
