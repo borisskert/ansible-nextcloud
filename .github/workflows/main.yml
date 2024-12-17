@@ -14,16 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "${{ github.repository }}"
 
       - name: Run default tests
-        uses: borisskert/molecule-action@v21.01.08
+        uses: borisskert/molecule-action@v24.12.9
         with:
           arguments: test
 
       - name: Run 'all-parameters' tests
-        uses: borisskert/molecule-action@v21.01.08
+        uses: borisskert/molecule-action@v24.12.9
         with:
           arguments: test --scenario-name all-parameters
