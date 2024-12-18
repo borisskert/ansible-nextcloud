@@ -24,8 +24,7 @@
         not docker_compose_file.content == ( expected_content | b64encode )
       vars:
         expected_content: |
-          version: '3.2'
-
+          ---
           # See https://hub.docker.com/_/nextcloud/
 
           services:

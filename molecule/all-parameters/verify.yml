@@ -32,13 +32,12 @@
         not docker_compose_file.content == ( expected_content | b64encode )
       vars:
         expected_content: |
-          version: '3.2'
-
+          ---
           # See https://hub.docker.com/_/nextcloud/
 
           services:
             db:
-              image: postgres:12.22
+              image: postgres:17.2
               volumes:
                 - /srv/my_nextcloud/database:/var/lib/postgresql/data
               environment:
