@@ -5,8 +5,8 @@
 
   roles:
     - role: ansible-nextcloud
-      nextcloud_image_version: '20.0.4'
-      nextcloud_db_image_version: '12.5'
+      nextcloud_image_version: '30.0.4'
+      nextcloud_db_image_version: '12.22'
       nextcloud_interface: 127.0.0.1
       nextcloud_http_port: 10080
       nextcloud_www_volume: /srv/my_nextcloud/www
