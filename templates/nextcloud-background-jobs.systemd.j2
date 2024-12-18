@@ -3,7 +3,7 @@ Description={{nextcloud_background_service_name}} service
 Requires={{nextcloud_service_name}}.service
 
 [Service]
-ExecStart=/usr/bin/docker exec \
+ExecStart={{docker_executable}} exec \
   -u {{ nextcloud_www_data_uid }} \
   {{ nextcloud_container_name }} \
   php -f /var/www/html/cron.php

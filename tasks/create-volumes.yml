@@ -4,7 +4,7 @@
     path: "{{ nextcloud_www_volume }}"
     state: directory
     owner: "{{ nextcloud_www_data_uid }}"
-    group: root
+    group: "{{ nextcloud_www_data_uid }}"
     mode: 0750
 
 - name: create data volume
@@ -12,7 +12,7 @@
     path: "{{ nextcloud_data_volume }}"
     state: directory
     owner: "{{ nextcloud_www_data_uid }}"
-    group: root
+    group: "{{ nextcloud_www_data_uid }}"
     mode: 0770
   when: nextcloud_data_volume is defined
     and nextcloud_data_volume | length > 0
@@ -22,7 +22,7 @@
     path: "{{ nextcloud_custom_apps_volume }}"
     state: directory
     owner: "{{ nextcloud_www_data_uid }}"
-    group: root
+    group: "{{ nextcloud_www_data_uid }}"
     mode: 0770
   when: nextcloud_custom_apps_volume is defined
     and nextcloud_custom_apps_volume | length > 0
@@ -32,5 +32,5 @@
     path: "{{ nextcloud_database_volume }}"
     state: directory
     owner: "{{ nextcloud_database_uid }}"
-    group: root
+    group: "{{ nextcloud_www_data_uid }}"
     mode: 0700
