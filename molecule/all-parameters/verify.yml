@@ -12,7 +12,7 @@
         not docker_file.content == ( expected_content | b64encode )
       vars:
         expected_content: |
-          FROM nextcloud:20.0.4
+          FROM nextcloud:30.0.4
 
           MAINTAINER borisskert <boris.skert@gmail.com>
 
@@ -32,13 +32,12 @@
         not docker_compose_file.content == ( expected_content | b64encode )
       vars:
         expected_content: |
-          version: '3.2'
-
+          ---
           # See https://hub.docker.com/_/nextcloud/
 
           services:
             db:
-              image: postgres:12.5
+              image: postgres:17.2
               volumes:
                 - /srv/my_nextcloud/database:/var/lib/postgresql/data
               environment:
@@ -51,7 +50,7 @@
 
             app:
               build: .
-              image: local/nextcloud:20.0.4
+              image: local/nextcloud:30.0.4
               container_name: nextcloud_web
               ports:
                 - 127.0.0.1:10080:80
@@ -91,55 +90,55 @@
           Requires=docker.service
 
           [Service]
-          ExecStartPre=-/usr/local/bin/docker-compose \
+          ExecStartPre=-/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             down \
             --remove-orphans
 
-          ExecStartPre=/usr/local/bin/docker-compose \
+          ExecStartPre=/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             build
 
-          ExecStart=/usr/local/bin/docker-compose \
+          ExecStart=/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             up \
             --build
 
-          ExecStop=-/usr/local/bin/docker-compose \
+          ExecStop=-/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
             php occ db:add-missing-columns
 
-          ExecStop=-/usr/local/bin/docker-compose \
+          ExecStop=-/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
             php occ db:add-missing-primary-keys
 
-          ExecStop=-/usr/local/bin/docker-compose \
+          ExecStop=-/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
             php occ db:add-missing-indices
 
-          ExecStop=-/usr/local/bin/docker-compose \
+          ExecStop=-/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
             exec -T -u 033 app \
             php occ db:convert-filecache-bigint --no-interaction
 
-          ExecStop=/usr/local/bin/docker-compose \
+          ExecStop=/usr/bin/docker compose \
             --project-directory /opt/nextcloud/docker \
             --file /opt/nextcloud/docker/docker-compose.yml \
             --project-name nextcloud \
@@ -207,8 +206,11 @@
       register: netcat_10080
       retries: 300
       delay: 1
-      until: netcat_10080 is defined
-        and netcat_10080.rc == 0
+      until: netcat_10080 is defined and (
+        netcat_10080.rc == 0
+        or netcat_10080.rc == 2) # nc command not found
+      failed_when: netcat_10080 is defined
+        and netcat_10080.rc != 0
       when: not (
         molecule_docker_environment is defined
         and molecule_docker_environment | bool

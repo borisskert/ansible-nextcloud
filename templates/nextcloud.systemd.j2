@@ -7,55 +7,55 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-ExecStartPre=-{{docker_compose_executable}} \
+ExecStartPre=-{{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   down \
   --remove-orphans
 
-ExecStartPre={{docker_compose_executable}} \
+ExecStartPre={{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   build
 
-ExecStart={{docker_compose_executable}} \
+ExecStart={{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   up \
   --build
 
-ExecStop=-{{docker_compose_executable}} \
+ExecStop=-{{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   exec -T -u {{nextcloud_www_data_uid}} app \
   php occ db:add-missing-columns
 
-ExecStop=-{{docker_compose_executable}} \
+ExecStop=-{{docker_executable}} compose \
   --project-directory /opt/nextcloud/docker \
   --file /opt/nextcloud/docker/docker-compose.yml \
   --project-name nextcloud \
   exec -T -u {{nextcloud_www_data_uid}} app \
   php occ db:add-missing-primary-keys
 
-ExecStop=-{{docker_compose_executable}} \
+ExecStop=-{{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   exec -T -u {{nextcloud_www_data_uid}} app \
   php occ db:add-missing-indices
 
-ExecStop=-{{docker_compose_executable}} \
+ExecStop=-{{docker_executable}} compose \
   --project-directory {{nextcloud_docker_working_directory}} \
   --file {{nextcloud_docker_compose_path}} \
   --project-name {{nextcloud_service_name}} \
   exec -T -u {{nextcloud_www_data_uid}} app \
   php occ db:convert-filecache-bigint --no-interaction
 
-ExecStop=/usr/local/bin/docker-compose \
+ExecStop={{docker_executable}} compose \
   --project-directory /opt/nextcloud/docker \
   --file /opt/nextcloud/docker/docker-compose.yml \
   --project-name nextcloud \

@@ -37,4 +37,4 @@ nextcloud_background_jobs_on_calendar: '*:0/5'
 
 nextcloud_additional_apt_packages: []
 
-docker_compose_executable: /usr/local/bin/docker-compose
+docker_executable: /usr/bin/docker
